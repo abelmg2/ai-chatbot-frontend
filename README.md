@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # ai-chatbot-frontend
 
 This template should help get you started developing with Vue 3 in Vite.
@@ -27,3 +28,6 @@ npm run dev
 ```sh
 npm run build
 ```
+=======
+# ai-chatbot-frontend
+>>>>>>> 7bcb00a353b5d03ace1743fec1149b10205aea94
