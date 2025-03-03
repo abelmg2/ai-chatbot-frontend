@@ -98,7 +98,7 @@
   
         try {
           // Call your backend API
-          const response = await axios.post("http://localhost:5000/chat", {
+          const response = await axios.post("https://my-ai-chatbot-backend.glitch.me/chat", {
             message: userMessage
           });
           // Push bot reply
@@ -201,6 +201,7 @@
     margin-left: 5px;
     margin-right: 7px;
     margin-bottom: 30px;
+    border: 0.5px solid #ddd;
   }
   /* New Conversation Button */
   .new-conversation-btn {
