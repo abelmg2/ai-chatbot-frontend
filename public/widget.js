@@ -1,10 +1,10 @@
 (function() {
     // Get reference to the script element FIRST
     const scriptElement = document.currentScript || 
-    document.querySelector('script[src*="widget.js"]');
+    document.querySelector('script#chatbot-script'); // Match explicit ID from HTML
 
     if (!scriptElement) {
-      console.error('Chatbot script element not found!');
+      console.error("Chatbot widget script element not found!");
       return;
     }
 
@@ -30,7 +30,7 @@
       const iframe = document.createElement('iframe');
       iframe.sandbox = 'allow-scripts'; // Disable cookies
       iframe.id = 'chatbot-iframe';
-      iframe.src = document.currentScript.getAttribute('data-iframe-src') || 'https://abel-chatbot.netlify.app';
+      iframe.src = scriptElement?.getAttribute('data-iframe-src') || 'https://abel-chatbot.netlify.app';
       iframe.style = 'width:100%; height:100%; border:none;';
       container.appendChild(iframe);
       document.body.appendChild(container);
@@ -47,11 +47,6 @@
       const btnColor = scriptElement?.getAttribute('data-button-color') || '#007bff';
       // const autoOpen = scriptElement?.getAttribute('data-auto-open') === 'true';
       // const btnColor = document.currentScript.getAttribute('data-button-color') || '#007bff';
-      
-      // FIX: Read attribute directly without intermediate variable
-      if (scriptElement?.getAttribute('data-auto-open') === 'true') {
-        createChatbotWidget();
-      }
 
       Object.assign(btn.style, {
         position: 'fixed',
@@ -71,15 +66,23 @@
   
       btn.onclick = () => {
         const container = document.getElementById('chatbot-widget-container');
-        if (!container) createChatbotWidget();
-        else {
+        if (!container) {
+          createChatbotWidget();
+          container.style.transform = 'translateY(0)'; //Immidately show
+        } else {
           const isHidden = container.style.transform === 'translateY(120%)';
           container.style.transform = isHidden ? 'translateY(0)' : 'translateY(120%)';
         }
       };
   
       document.body.appendChild(btn);
-      if (document.currentScript.getAttribute('data-auto-open') === 'true') createChatbotWidget();
+
+      // Handle auto-open
+      if (scriptElement?.getAttribute('data-auto-open') === 'true') {
+        createChatbotWidget();
+        const container = document.getElementById('chatbot-widget-container');
+        if (container) container.style.transform = 'translateY(0)';
+      }
     }
   
     window.addEventListener('message', (e) => {
