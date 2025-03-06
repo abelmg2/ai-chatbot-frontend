@@ -100,6 +100,7 @@
 
       // Optional: Update height when messages change (if needed)
       // this.$watch("messages", this.sendHeightToParent, { deep: true });
+      console.log(process.env.VITE_API_URL);
     },
 
     beforeUnmount() {
@@ -143,7 +144,7 @@
   
         try {
           // Call your backend API
-          const response = await axios.post(`${process.env.VUE_APP_API_URL}/chat` || "https://my-ai-chatbot-backend.glitch.me/chat", {
+          const response = await axios.post(`${process.env.VUE_APP_API_URL}/chat`, {
             message: userMessage
           });
           // Push bot reply
