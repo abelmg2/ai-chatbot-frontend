@@ -92,6 +92,8 @@
     }, */
 
     mounted() {
+      console.log("API URL:", import.meta.env.VITE_API_URL); // Should show your Glitch URL
+      
       // Send initial height when component mounts
       this.sendHeightToParent();
 
@@ -100,7 +102,6 @@
 
       // Optional: Update height when messages change (if needed)
       // this.$watch("messages", this.sendHeightToParent, { deep: true });
-      console.log(process.env.VITE_API_URL);
     },
 
     beforeUnmount() {
