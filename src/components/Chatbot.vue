@@ -143,7 +143,7 @@
   
         try {
           // Call your backend API
-          const response = await axios.post(`${process.env.VUE_APP_API_URL}/chat`, {
+          const response = await axios.post(`${process.env.VUE_APP_API_URL}/chat` || "https://my-ai-chatbot-backend.glitch.me", {
             message: userMessage
           });
           // Push bot reply
