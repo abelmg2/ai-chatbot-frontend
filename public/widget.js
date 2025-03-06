@@ -1,4 +1,13 @@
 (function() {
+    // Get reference to the script element FIRST
+    const scriptElement = document.currentScript || 
+    document.querySelector('script[src*="widget.js"]');
+
+    if (!scriptElement) {
+      console.error('Chatbot script element not found!');
+      return;
+    }
+
     function createChatbotWidget() {
       if (document.getElementById('chatbot-widget-container')) return;
   
@@ -33,7 +42,17 @@
       const btn = document.createElement('button');
       btn.id = 'chatbot-toggle-btn';
       btn.innerText = 'Chat';
-      const btnColor = document.currentScript.getAttribute('data-button-color') || '#007bff';
+
+      // SAFE attribute access
+      const btnColor = scriptElement?.getAttribute('data-button-color') || '#007bff';
+      // const autoOpen = scriptElement?.getAttribute('data-auto-open') === 'true';
+      // const btnColor = document.currentScript.getAttribute('data-button-color') || '#007bff';
+      
+      // FIX: Read attribute directly without intermediate variable
+      if (scriptElement?.getAttribute('data-auto-open') === 'true') {
+        createChatbotWidget();
+      }
+
       Object.assign(btn.style, {
         position: 'fixed',
         bottom: '20px',
@@ -46,7 +65,8 @@
         border: 'none',
         zIndex: '1001',
         boxShadow: '0 4px 8px rgba(0,0,0,0.2)',
-        cursor: 'pointer'
+        cursor: 'pointer',
+        transition: 'transform 0.2s ease'
       });
   
       btn.onclick = () => {
@@ -63,6 +83,7 @@
     }
   
     window.addEventListener('message', (e) => {
+        if (e.origin !== 'https://abel-chatbot.netlify.app') return;
         if (e.data.type === 'chatbotResize') {
           const container = document.getElementById('chatbot-widget-container');
           container.style.height = `${e.data.height}px`;
