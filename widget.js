@@ -3,7 +3,7 @@
     // Function to create the chatbot widget as an iFrame
     function createChatbotWidget() {
       // Prevent duplicate insertion if the widget already exists
-      if (document.getElementById('chatbot-iframe')) return;
+      // if (document.getElementById('iframe AI Chatbot')) return;
   
       // Create a container div for styling and positioning
       var container = document.createElement('div');
