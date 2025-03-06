@@ -1,5 +1,5 @@
 <template>
-    <div class="chat-wrapper">
+    <div class="chat-wrapper" ref="chatContainer">
       <!-- Top Bar / Header -->
       <div class="top-bar">
         <h2>Hello there 👋</h2>
@@ -40,6 +40,8 @@
         </div>
         <transition-group name="fade" tag="div" class="messages-wrapper">
           <div
+            role="log"
+            aria-live="polite"
             v-for="(msg, index) in messages"
             :key="index"
             :class="['message', msg.type]"
@@ -53,6 +55,8 @@
       <!-- Input Area -->
       <div class="input-area">
         <input
+          aria-label="Type your message"
+          @keydown.esc="userInput = ''"
           v-model="userInput"
           @keyup.enter="sendMessage"
           placeholder="Type your message..."
@@ -65,13 +69,16 @@
   
 <script>
   import axios from "axios";
+  import DOMPurify from 'dompurify';
   
   export default {
     name: "Chatbot",
     data() {
       return {
+        isLoading: false,
         userInput: "",
-        messages: []
+        messages: [],
+        lastMessageTime: 0
       };
     },
     /* mounted() {
@@ -83,22 +90,60 @@
       });
       this.scrollToBottom();
     }, */
+
+    mounted() {
+      // Send initial height when component mounts
+      this.sendHeightToParent();
+
+      // Update height on window resize
+      window.addEventListener("resize", this.sendHeightToParent);
+
+      // Optional: Update height when messages change (if needed)
+      // this.$watch("messages", this.sendHeightToParent, { deep: true });
+    },
+
+    beforeUnmount() {
+      // Cleanup event listener
+      window.removeEventListener("resize", this.sendHeightToParent);
+    },
+
     methods: {
+      sendHeightToParent() {
+        this.$nextTick(() => { // Wait for DOM updates
+          // Get the root chat container element
+          const chatContainer = this.$refs.chatContainer; // or use a `ref` if you have one
+          if (!chatContainer) return;
+
+          // Calculate total height (include padding/margins if needed)
+          const height = chatContainer.getBoundingClientRect().height;
+
+          // Notify parent window (widget) of height change
+          window.parent.postMessage(
+            { type: "chatbotResize", height: height + 20 },
+            "https://abel-chatbot.netlify.app" // Restrict to your domain
+          );
+        });
+      },
+            
       async sendMessage() {
+        if (Date.now() - this.lastMessageTime < 1000) return;
+        this.lastMessageTime = Date.now();
+
         if (!this.userInput.trim()) return;
         // Push user message
         this.messages.push({
-          text: this.userInput,
+          text: DOMPurify.sanitize(this.userInput),
           type: "user",
           timestamp: new Date().toLocaleString()
         });
         const userMessage = this.userInput;
+        this.isLoading = true;
         this.userInput = "";
         this.scrollToBottom();
   
         try {
           // Call your backend API
-          const response = await axios.post("https://my-ai-chatbot-backend.glitch.me/chat", {
+          const response = await axios.post(`${process.env.VUE_APP_API_URL}/chat`, {
             message: userMessage
           });
           // Push bot reply
@@ -108,12 +153,18 @@
             timestamp: new Date().toLocaleString(),
           });
         } catch (error) {
-          console.error(error);
+          // console.error(error);
+          let errorMessage = "Error: Unable to connect";
+          if (error.response?.status === 429) {
+            errorMessage = "Too many requests - please wait";
+          }
           this.messages.push({
-            text: "Error: Unable to connect to chatbot.",
+            text: errorMessage,
             type: "error",
             timestamp: new Date().toLocaleString()
           });
+        } finally {
+          this.isLoading = false;
         }
         this.scrollToBottom();
       },
@@ -136,6 +187,14 @@
         ];
         this.userInput = "";
         this.scrollToBottom();
+      },
+      watch: {
+        messages: {
+          handler() {
+            this.sendHeightToParent();
+          },
+          deep: true
+        }
       }
     }
   };
@@ -228,6 +287,15 @@
     overflow-y: auto;
     background: #f7f9fc;
   }
+
+  .chat-box::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .chat-box::-webkit-scrollbar-thumb {
+    background: #888; 
+    border-radius: 3px;
+  }
   
   .messages-wrapper {
     display: flex;
@@ -310,5 +378,14 @@
   .fade-leave-to {
     opacity: 0;
   }
+
+  @media (max-width: 480px) {
+    .chat-wrapper {
+      margin: 0;
+      border-radius: 0;
+      height: 100vh;
+    }
+  }
+
 </style>
   
