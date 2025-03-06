@@ -144,7 +144,7 @@
   
         try {
           // Call your backend API
-          const response = await axios.post(`${process.env.VUE_APP_API_URL}/chat`, {
+          const response = await axios.post(`${process.env.VITE_API_URL}/chat`, {
             message: userMessage
           });
           // Push bot reply
