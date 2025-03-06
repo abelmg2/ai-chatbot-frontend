@@ -19,6 +19,7 @@
       });
   
       const iframe = document.createElement('iframe');
+      iframe.sandbox = 'allow-scripts'; // Disable cookies
       iframe.id = 'chatbot-iframe';
       iframe.src = document.currentScript.getAttribute('data-iframe-src') || 'https://abel-chatbot.netlify.app';
       iframe.style = 'width:100%; height:100%; border:none;';
