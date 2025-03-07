@@ -12,9 +12,18 @@
         right: 20px;
         z-index: 1000;
         background: ${script.getAttribute('data-button-color') || '#007bff'};
+        width: '60px',
+        height: '60px',
+        borderRadius: '50%',
+        color: '#fff',
+        border: 'none',
+        boxShadow: '0 4px 8px rgba(0,0,0,0.2)',
+        cursor: 'pointer',
+        transition: 'transform 0.2s ease'
         /* ... other styles ... */
       }
     `;
+
     document.head.appendChild(style);
   
     // Create toggle button and container
