@@ -389,5 +389,57 @@
     }
   }
 
+  @media (max-width: 350px) {
+    .chat-wrapper {
+      margin: 0;
+      border-radius: 0;
+      height: 100vh;
+    }
+    .input-area {
+      padding: 0;
+    }
+    .chat-input {
+      padding: 5px 5px;
+      border: 0.25px solid #ddd;
+      border-radius: 10px;
+      font-size: 12px;
+    }
+    .message {
+      margin-bottom: 7px;
+      padding: 5px 5px;
+      border-radius: 5px;
+      font-size: 0.65rem;
+    }
+    .send-btn {
+      margin-left: 5px;
+      padding: 0;
+      border-radius: 10px;
+      font-size: 14px;
+    }
+    .top-bar {
+      padding: 7px;
+    }
+    .top-bar h2 {
+      margin: 0 0 5px;
+      font-size: 1rem;
+    }
+    .top-bar p {
+      margin: 0 0 5px;
+    }
+    .new-conversation {
+      padding: 5px;
+      margin-left: 0;
+      margin-right: 2px;
+      margin-bottom: 10px;
+    }
+    .new-conversation-btn {
+      width: 85%;
+      padding: 7px 2%;
+      border-radius: 2px;
+      font-weight: 400;
+      margin-left: 3px;
+      font-size: 0.5rem;
+    }
+  }
 </style>
   
