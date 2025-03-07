@@ -65,11 +65,14 @@
       });
   
       btn.onclick = () => {
-        const container = document.getElementById('chatbot-widget-container');
+        let container = document.getElementById('chatbot-widget-container');
         if (!container) {
           createChatbotWidget();
-          container.style.transform = 'translateY(0)'; //Immidately show
-        } else {
+          // container.style.transform = 'translateY(0)'; //Immidately show
+          container = document.getElementById('chatbot-widget-container'); // Re-get after creation
+        } 
+        
+        if (container) {
           const isHidden = container.style.transform === 'translateY(120%)';
           container.style.transform = isHidden ? 'translateY(0)' : 'translateY(120%)';
         }
