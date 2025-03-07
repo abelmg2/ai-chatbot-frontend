@@ -395,6 +395,9 @@
       border-radius: 0;
       height: 100vh;
     }
+    .chat-box {
+      padding: 7px;
+    }
     .input-area {
       padding: 0;
     }
@@ -433,12 +436,12 @@
       margin-bottom: 10px;
     }
     .new-conversation-btn {
-      width: 85%;
-      padding: 7px 2%;
+      width: 95%;
+      padding: 7px 2px;
       border-radius: 2px;
       font-weight: 400;
       margin-left: 3px;
-      font-size: 0.5rem;
+      font-size: 0.6rem;
     }
   }
 </style>
